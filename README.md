@@ -26,6 +26,10 @@ Again: this project does not go into implementation detail of how you'd implemen
 
 ## How to play in the Waterpark
 
+### Installation
+
+You just need Python. Clone the repo, and you'll be ready to go. You can create a `venv`, but the only dependency this project uses is numpy.
+
 ### Configuration
 
 You'll have to modify `sim.sh` to your liking, and then run that script. The supported parameters are below:
