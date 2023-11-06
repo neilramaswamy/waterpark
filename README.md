@@ -28,8 +28,8 @@ Again: this project does not go into implementation detail of how you'd implemen
 
 You'll have to modify `sim.sh` to your liking, and then run that script. The supported parameters are below:
 
-- `DISTRIBUTION`: `"exponential"`, `"uniform"`, `"constant"`
-- `PARAMETERS`: comma-separated parameters to each. I know, this is a bit janky. But for `"exponential"` you'd provide just the rate parameter, i.e. `"3"`. For uniform, you'd provide the range :`"0 5"`. For constant, just the constant: `"10"`.
+- `DISTRIBUTION`: `"gamma"`, `"exponential"`, `"uniform"`, `"constant"`
+- `PARAMETERS`: comma-separated parameters to each. I know, this is a bit janky. `gamma` takes in `<shape> <scale>`, `exponential` takes in `<rate>`, `uniform` takes in `<low> <high>` and `constant` takes in `<value>`.
 - `WATERMARK_DELAY`: almost self-explanatory. However, this isn't the "maximum" delay anymore. It's the delay you'd like to experiment with. More on this below.
 - `WATERMARK_SPEED`: the number of records to process before updating the watermark. Systems such as Structured Streaming update the watermark at discrete intervals, i.e. at the end of each batch. If you set this to be large, the watermark will move more slowly, since it is updated less frequently. This means that less records will be dropped. If you set this to be 1, then more records will be dropped.
 
