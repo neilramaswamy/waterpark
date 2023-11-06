@@ -21,10 +21,11 @@ class Distribution(abc.ABC):
         pass
 
 
-class GaussianDistribution(Distribution):
+class GammaDistribution(Distribution):
     def sample(self) -> float:
-        mean, std_dev = self.parameters
-        return np.random.normal(mean, std_dev)
+        shape = self.parameters[0]
+        scale = self.parameters[1]
+        return np.random.gamma(shape, scale)
 
 
 class ExponentialDistribution(Distribution):
@@ -45,23 +46,21 @@ class ConstantDistribution(Distribution):
 
 
 def get_distribution(name: str, parameters: List[float]) -> Distribution:
-    if name == "gaussian":
+    if name == "gamma":
         if len(parameters) != 2:
-            raise ValueError(
-                "Gaussian distribution requires 2 parameters: mean and standard deviation"
-            )
-        return GaussianDistribution(parameters)
+            raise ValueError("Gamma distribution requires 2 parameter: <shape> <scale>")
+        return GammaDistribution(parameters)
     elif name == "exponential":
         if len(parameters) != 1:
-            raise ValueError("Exponential distribution requires 1 parameter: rate")
+            raise ValueError("Exponential distribution requires 1 parameter: <rate>")
         return ExponentialDistribution(parameters)
     elif name == "uniform":
         if len(parameters) != 2:
-            raise ValueError("Uniform distribution requires 2 parameters: low and high")
+            raise ValueError("Uniform distribution requires 2 parameters: <low> <high>")
         return UniformDistribution(parameters)
     elif name == "constant":
         if len(parameters) != 1:
-            raise ValueError("Constant distribution requires 1 parameter: value")
+            raise ValueError("Constant distribution requires 1 parameter: <value>")
         return ConstantDistribution(parameters)
     else:
         raise ValueError(f"Unsupported distribution type: {name}")
@@ -76,7 +75,7 @@ class SimulationResult:
         return self.num_dropped_by_watermark / self.num_records
 
     def __str__(self):
-        return f"(percentage_dropped_by_wm: {self.percentage_dropped()})"
+        return f"(percentage_aggregated: {1 - self.percentage_dropped()})"
 
 
 def generate_data(
@@ -98,8 +97,8 @@ def generate_data(
         arrival_time = event_time + delay
 
         records[i] = (event_time, arrival_time)
-        # print(f"Got record {records[i]}")
 
+    # Sort based on when we _receive_ the records, i.e. arrival time
     sorted_records = sorted(records, key=lambda x: x[1])
 
     # Streaming engine metrics
@@ -109,7 +108,6 @@ def generate_data(
 
     for i, record in enumerate(sorted_records):
         event_time, arrival_time = record
-        # print(f"Got record ({event_time}, {arrival_time}), watermark: {global_watermark}")
 
         # Drop late records
         if event_time < global_watermark:
@@ -130,8 +128,8 @@ def main():
     parser = argparse.ArgumentParser(description="Data Generation Script")
     parser.add_argument(
         "--distribution",
-        choices=["gaussian", "exponential", "uniform", "constant"],
-        help="Type of distribution (gaussian, exponential, uniform, or constant)",
+        choices=["exponential", "gamma", "uniform", "constant"],
+        help="Type of distribution (exponential, uniform, or constant)",
     )
     parser.add_argument(
         "--parameters",

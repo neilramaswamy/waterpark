@@ -1,13 +1,15 @@
 #!/bin/bash
 
-DISTRIBUTION="exponential"
-PARAMETERS="0.5"
+DISTRIBUTION="gamma"
+PARAMETERS="9 0.5"
 
-WATERMARK_DELAY="3"
-WATERMARK_SPEED=100
+# 90% percentile:
+# https://www.wolframalpha.com/input?i=gamma+%289%2C+0.5%29+distribution
+WATERMARK_DELAY="5.40"
+WATERMARK_SPEED="100"
 
-INPUT_RATE=10000
-DURATION=1000
+INPUT_RATE="10000"
+DURATION="100"
 
 python3 waterpark.py \
     --distribution $DISTRIBUTION \
