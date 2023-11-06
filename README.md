@@ -1,8 +1,8 @@
 # Waterpark: A playground for watermarks
 
-Unfortunately, I can't motivate and explain watermarks here, since that's an entire topic in and of itself. If you're not already familiar with watermarks, please read [this blog post](https://www.databricks.com/blog/2022/08/22/feature-deep-dive-watermarking-apache-spark-structured-streaming.html), and come back.
+This project gives you tools to experiment with statistical watermarking (most notably: a stream simulator that implements watermark creation and propagation). In the future, it will support a pluggable watermark strategy, where you can try your hand at _implementing_ a statisical watermarking scheme. There are quiz questions/exercises at the end of the README; you can use these to test/improve your understanding of statsitical watermarks.
 
-Also, there are quiz questions/exercises at the end of the README, if you want a challenge :)
+Unfortunately, I can't motivate and explain watermarks here, since that's an entire topic in and of itself. If you're not already familiar with watermarks, please read [this blog post](https://www.databricks.com/blog/2022/08/22/feature-deep-dive-watermarking-apache-spark-structured-streaming.html), and come back.
 
 ## Traditional watermark delays
 
